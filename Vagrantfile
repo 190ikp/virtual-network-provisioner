@@ -53,7 +53,10 @@ Vagrant.configure("2") do |config|
       node.vm.network "private_network", virtualbox__intnet: "eth1", auto_config: false
 
       node.vm.provision "shell", privileged: false, inline: <<-SHELL
-        /vagrant/node_init.sh setup
+        sudo add-apt-repository universe
+        sudo apt update
+        sudo debconf-set-selections <<< 'libssl1.1:amd64 libraries/restart-without-asking boolean true'
+        sudo apt upgrade --yes
       SHELL
     end
   end
