@@ -30,4 +30,4 @@ Cumulus VXを使ったネットワーク学習用のリポジトリ
 
 1. `vagrant up`
 2. `vagrant ssh <スイッチorノード>`
-3. スイッチの場合，`cumulus`アカウントに切り替える必要があるので`sudu login`で切り替える(アカウント/パスワードは`cumulus/CumulusLinux!`)
+3. スイッチの場合，`cumulus`アカウントに切り替える必要があるので`sudo login`で切り替える(アカウント/パスワードは`cumulus/CumulusLinux!`)
