@@ -7,6 +7,10 @@ Vagrant.configure("2") do |config|
     vb.memory = "512"
   end
 
+  if Vagrant.has_plugin?("vagrant-cachier")
+    config.cache.scope = :box 
+  end
+
   # spine switch provisioning
   (1..2).each do |i|
     config.vm.define "spine-#{i}" do |spine|
