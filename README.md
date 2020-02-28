@@ -8,7 +8,6 @@ Cumulus VXを使ったネットワーク学習用のリポジトリ
 
 -  Vagrant
 -  VirtualBox
--  GNS3 (<-あるといいかも)
 
 ## 構成
 
@@ -18,7 +17,11 @@ Cumulus VXを使ったネットワーク学習用のリポジトリ
 
 - Cumulus VX (Cumulus Linux)
 - spineスイッチは2つ, leafスイッチは3つ立ち上がるようになっている(spine-1, spine-2, leaf-1, ..., leaf-3)
-- それぞれ仮想NICはswp1-swp4の4つ(+VirtualBoxのNAT用NIC)
+- 仮想NICは
+  - spine: swp1-swp4の4つ
+  - leaf: swp1-swp4の5つ
+  
+  (+VirtualBoxのNAT用NIC)
 
 ### サーバ
 
