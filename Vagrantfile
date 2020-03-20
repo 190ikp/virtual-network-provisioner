@@ -21,7 +21,7 @@ Vagrant.configure("2") do |config|
       end
 
       # configure physical NIC
-      (1..4).each do |j|
+      (1..24).each do |j|
         spine.vm.network "private_network", virtualbox__intnet: "swp#{j}", auto_config: false
       end
     end
@@ -37,15 +37,15 @@ Vagrant.configure("2") do |config|
       end
 
       # configure physical NIC
-      (1..5).each do |j|
+      (1..48).each do |j|
         leaf.vm.network "private_network", virtualbox__intnet: "swp#{j}", auto_config: false
       end
     end
   end
 
   # server provisioning
-  (1..3).each do |i|
-    config.vm.define "server-#{i}" do |node|
+  (1..4).each do |i|
+    config.vm.define "node-#{i}" do |node|
       node.vm.box = "ubuntu/bionic64"
       node.vm.provider "virtualbox" do |vb|
         vb.name = "node-#{i}"
