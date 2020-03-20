@@ -37,7 +37,7 @@ Vagrant.configure("2") do |config|
       end
 
       # configure physical NIC
-      (1..48).each do |j|
+      (1..24).each do |j|
         leaf.vm.network "private_network", virtualbox__intnet: "swp#{j}", auto_config: false
       end
     end
