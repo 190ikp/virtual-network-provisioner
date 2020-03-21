@@ -3,6 +3,10 @@
 
 Vagrant.configure("2") do |config|
 
+  num_spine = 2
+  num_leaf = 2
+  num_node = 2
+
   config.vm.provider "virtualbox" do |vb|
     vb.memory = "512"
   end
@@ -12,7 +16,7 @@ Vagrant.configure("2") do |config|
   end
 
   # spine switch provisioning
-  (1..2).each do |i|
+  (1..num_spine).each do |i|
     config.vm.define "spine-#{i}" do |spine|
       spine.vm.box = "CumulusCommunity/cumulus-vx"
       spine.vm.provider "virtualbox" do |vb|
@@ -20,15 +24,16 @@ Vagrant.configure("2") do |config|
         vb.customize ["modifyvm", :id, "--ostype", "Linux_64"]
       end
 
-      # configure physical NIC
-      (1..24).each do |j|
-        spine.vm.network "private_network", virtualbox__intnet: "swp#{j}", auto_config: false
+      # configure physical link
+      (1..num_leaf).each do |j|
+        spine.vm.network "private_network", virtualbox__intnet: "intnet#{i}#{j}", auto_config: false
       end
+
     end
   end
 
   # leaf switch provisioning
-  (1..3).each do |i|
+  (1..num_leaf).each do |i|
     config.vm.define "leaf-#{i}" do |leaf|
       leaf.vm.box = "CumulusCommunity/cumulus-vx"
       leaf.vm.provider "virtualbox" do |vb|
@@ -36,15 +41,17 @@ Vagrant.configure("2") do |config|
         vb.customize ["modifyvm", :id, "--ostype", "Linux_64"]
       end
 
-      # configure physical NIC
-      (1..24).each do |j|
-        leaf.vm.network "private_network", virtualbox__intnet: "swp#{j}", auto_config: false
+      # configure physical link
+      (1..num_spine).each do |j|
+        leaf.vm.network "private_network", virtualbox__intnet: "intnet#{j}#{i}", auto_config: false
       end
+      leaf.vm.network "private_network", virtualbox__intnet: "node#{i}", auto_config: false
+
     end
   end
 
   # server provisioning
-  (1..4).each do |i|
+  (1..num_node).each do |i|
     config.vm.define "node-#{i}" do |node|
       node.vm.box = "ubuntu/bionic64"
       node.vm.provider "virtualbox" do |vb|
@@ -52,9 +59,8 @@ Vagrant.configure("2") do |config|
         vb.customize ["modifyvm", :id, "--ostype", "Ubuntu_64"]
       end
 
-      # configure physical NIC
-      node.vm.network "private_network", virtualbox__intnet: "eth0", auto_config: false
-      node.vm.network "private_network", virtualbox__intnet: "eth1", auto_config: false
+      # configure physical link
+      node.vm.network "private_network", virtualbox__intnet: "node#{i}", auto_config: false
 
       node.vm.provision "shell", privileged: false, inline: <<-SHELL
         sudo add-apt-repository universe

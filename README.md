@@ -16,14 +16,14 @@ Cumulus VXを使ったネットワーク学習用のリポジトリ
 ### spine, leafスイッチ
 
 - Cumulus VX (Cumulus Linux)
-- spineスイッチは2つ, leafスイッチは3つ立ち上がるようになっている(spine-1, spine-2, leaf-1, ..., leaf-3)
-- 仮想NICはspine, leafスイッチともにswp1-24 (+VirtualBoxのNAT用NIC)
+- spine, leafスイッチは各2つ立ち上がるようになっている (spine-1, spine-2, leaf-1, leaf-2)
+- 仮想NICはspine, leafスイッチともに36個 (マネジメントポート含む)
 
 ### サーバ
 
 - Ubuntu 18.04
-- 3つのノードが立ち上がるようになっている(node-1, ..., node-3)
-- 仮想NICはeth0, eth1の2つ (+VirtualBoxのNAT用NIC)
+- 2つのノードが立ち上がるようになっている (node-1, node-2)
+- 仮想NICは8つまで (マネジメントポート含む)
 
 ## つかいかた
 
