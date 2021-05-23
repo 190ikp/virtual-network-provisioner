@@ -8,6 +8,7 @@ Cumulus VXを使ったネットワーク学習用のリポジトリ
 
 -  Vagrant
 -  VirtualBox
+-  構成に応じたストレージ容量
 
 ## 構成
 
@@ -17,17 +18,17 @@ Cumulus VXを使ったネットワーク学習用のリポジトリ
 
 - Cumulus VX (Cumulus Linux)
 - spine, leafスイッチは各2つ立ち上がるようになっている (spine-1, spine-2, leaf-1, leaf-2)
-- 仮想NICはspine, leafスイッチともに36個 (マネジメントポート含む)
+- 仮想NICはspine, leafスイッチともに36個まで (マネジメントポート含む)
 
 ### サーバ
 
 - Ubuntu 18.04
-- 2つのノードが立ち上がるようになっている (node-1, node-2)
+- 2つのノードが立ち上がるようになっている (node-1_1, node-2_1)
 - 仮想NICは8つまで (マネジメントポート含む)
 
 ## つかいかた
 
-1. `vagrant up`
+1. `vagrant up` (virtualboxでは`--parallel`オプションはサポートされていない)
 2. `vagrant ssh <スイッチorノード>`
 3. スイッチなら`sudo net`で設定，または`sudo vtysh`でIOSっぽいターミナルに入れる
 

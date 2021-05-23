@@ -5,7 +5,7 @@ Vagrant.configure("2") do |config|
 
   num_spine = 2
   num_leaf = 2
-  num_node = 2
+  num_node_per_leaf = 1
 
   config.vm.provider "virtualbox" do |vb|
     vb.memory = "512"
@@ -26,9 +26,8 @@ Vagrant.configure("2") do |config|
 
       # configure physical link
       (1..num_leaf).each do |j|
-        spine.vm.network "private_network", virtualbox__intnet: "intnet#{i}#{j}", auto_config: false
+        spine.vm.network "private_network", virtualbox__intnet: "intnet#{i}_#{j}", auto_config: false
       end
-
     end
   end
 
@@ -43,31 +42,27 @@ Vagrant.configure("2") do |config|
 
       # configure physical link
       (1..num_spine).each do |j|
-        leaf.vm.network "private_network", virtualbox__intnet: "intnet#{j}#{i}", auto_config: false
+        leaf.vm.network "private_network", virtualbox__intnet: "intnet#{j}_#{i}", auto_config: false
       end
-      leaf.vm.network "private_network", virtualbox__intnet: "node#{i}", auto_config: false
-
+      (1..num_node_per_leaf).each do |k|
+        leaf.vm.network "private_network", virtualbox__intnet: "node#{i}_#{k}", auto_config: false
+      end
     end
   end
 
   # server provisioning
-  (1..num_node).each do |i|
-    config.vm.define "node-#{i}" do |node|
-      node.vm.box = "ubuntu/bionic64"
-      node.vm.provider "virtualbox" do |vb|
-        vb.name = "node-#{i}"
-        vb.customize ["modifyvm", :id, "--ostype", "Ubuntu_64"]
+  (1..num_leaf).each do |i|
+    (1..num_node_per_leaf).each do |j|
+      config.vm.define "node-#{i}_#{j}" do |node|
+        node.vm.box = "ubuntu/bionic64"
+        node.vm.provider "virtualbox" do |vb|
+          vb.name = "node-#{i}_#{j}"
+          vb.customize ["modifyvm", :id, "--ostype", "Ubuntu_64"]
+        end
+
+        # configure physical link
+        node.vm.network "private_network", virtualbox__intnet: "node#{i}_#{j}", auto_config: false
       end
-
-      # configure physical link
-      node.vm.network "private_network", virtualbox__intnet: "node#{i}", auto_config: false
-
-      node.vm.provision "shell", privileged: false, inline: <<-SHELL
-        sudo add-apt-repository universe
-        sudo apt update
-        sudo debconf-set-selections <<< 'libssl1.1:amd64 libraries/restart-without-asking boolean true'
-        sudo apt upgrade --yes
-      SHELL
     end
   end
 end

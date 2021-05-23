@@ -1,4 +1,3 @@
-ubuntu-bionic-18.04-cloudimg-console.log
+*.log
 .vagrant/
-example/ubuntu-bionic-18.04-cloudimg-console.log
-example/.vagrant
+example/.vagrant/
